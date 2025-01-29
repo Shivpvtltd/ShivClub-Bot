@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Shiv Club - Number Game</title> 
+  <link rel="stylesheet" href="style.css">
+</head> 
+<body> 
+  <div class="logo-container"> 
+    <h1 class="heading">Shiv Club</h1> 
+  </div> 
+  <div class="wallet-box"> 
+    <h2><div id="walletBalanceBox"> ₹5000</div></h2>
+    <p>Wallet Balance</p> 
+    <div class="wallet-buttons"> 
+      <button class="withdraw">Withdraw</button> 
+      <button class="deposit">Deposit</button> 
+    </div> 
+  </div> 
+  <div class="container"> 
+    <div class="top-box"> 
+      <div class="wingo"> 
+        <p>Wingo 30s</p> 
+        <div class="numbers" id="wingo-numbers"></div> 
+      </div> 
+      <div class="time-box"> 
+        <p>Time remaining</p> 
+        <div class="time-remaining" id="timer">00:30</div> 
+        <div class="period-number" id="period-number"></div>
+      </div> 
+    </div> 
+    <div class="game-box">
+      <div class="heading-boxes"> 
+        <div class="heading-box green">Green</div> 
+        <div class="heading-box violet">Violet</div> 
+        <div class="heading-box red">Red</div> 
+      </div> 
+      
+      <!-- Number grid updated for two rows layout -->
+      <div class="number-grid"> 
+        <div class="row"> 
+          <div class="number-ball violet"><img src="no0.png" alt="0"></div> 
+          <div class="number-ball green"><img src="no1.png" alt="1"></div> 
+          <div class="number-ball red"><img src="no2.png" alt="2"></div> 
+          <div class="number-ball green"><img src="no3.png" alt="3"></div> 
+          <div class="number-ball red"><img src="no4.png" alt="4"></div> 
+        </div> 
+        <div class="row"> 
+          <div class="number-ball violet"><img src="no5.png" alt="5"></div> 
+          <div class="number-ball red"><img src="no6.png" alt="6"></div> 
+          <div class="number-ball green"><img src="no7.png" alt="7"></div> 
+          <div class="number-ball red"><img src="no8.png" alt="8"></div> 
+          <div class="number-ball green"><img src="no9.png" alt="9"></div> 
+        </div> 
+      </div>
+       <div class="heading-boxes"> 
+        <div class="heading-box big">Big</div> 
+        <div class="heading-box small">Small</div> 
+      </div> 
+      </div>
+<div class="history-section"> 
+      <hr class="divider"> 
+      <hr class="divider"> 
+      <div class="history-header"> 
+        <span class="period-no">Period no.</span> 
+        <span class="number-center">Number</span> 
+        <span class="big-small-right">Big/Small</span> 
+      </div> 
+    </div> 
+    <hr class="divider"> 
+    <div class="results-history" id="results-history"></div> 
+    <div id="history-navigation">
+      <button id="previous-btn" onclick="showPreviousPage()">Previous</button>
+      <button id="next-btn" onclick="showNextPage()">Next</button>
+    </div>
+  </div>
+
+  <!-- Batting Overlay (Slid-In Panel) -->
+  <div class="batting-overlay" id="battingOverlay">
+    <div class="batting-slide">
+        <h2 id="selectedOption"></h2>
+        <input type="number" id="betAmount" placeholder="Enter Amount" min="1" max="1000000" /><br>
+        <button id="confirmBet" class="confirm">Confirm Bet</button>
+        <button id="cancelBet" class="cancel">Cancel</button>
+    </div>
+  </div>
+  
+  <script src="Script.js"></script>
+</body>
+</html>

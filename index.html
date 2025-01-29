@@ -87,5 +87,19 @@
   </div>
   
   <script src="Script.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();  // Web App को पूरा स्क्रीन में खोलने के लिए
+
+    console.log("Telegram Web App Initialized!");
+
+    // अगर आपको यूज़र की जानकारी चाहिए:
+    console.log("User:", tg.initDataUnsafe.user);
+
+    // अगर आपको कोई बटन ऐड करना हो
+    tg.MainButton.text = "Start Game";
+    tg.MainButton.show();
+</script>
 </body>
 </html>

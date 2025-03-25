@@ -1,4 +1,3 @@
-
 let timeLeft = 30;
 let results = [];
 let timerInterval;
@@ -146,95 +145,30 @@ function closeBattingSlide() {
     }
 }
 
-// Event listener for the "Confirm Bet" button
-document.getElementById('confirmBet').addEventListener('click', () => {
-    const betAmount = parseInt(document.getElementById('betAmount').value, 10);
-    const selectedOption = document.getElementById('selectedOption').innerText.split(": ")[1];
-
-    if (isNaN(betAmount) || betAmount <= 0) {
-        alert("कृपया वैध राशि दर्ज करें।");
-        return;
-    }
-    if (betAmount > walletBalance) {
-        alert("अपर्याप्त बैलेंस!");
-        closeBattingSlide();
-    } else {
-        // Store the user's bet
-        userBets.push({
-            option: selectedOption,
-            amount: betAmount
-        });
-
-        walletBalance -= betAmount;
-        document.getElementById('walletBalanceBox').innerText = ` ₹${walletBalance}`;
-        alert(`बेट सफल! ₹${betAmount} आपके वॉलेट से कट गई है।`);
-        closeBattingSlide();
-    }
-});
-
-// Event listener for the "Cancel Bet" button
-document.getElementById('cancelBet').addEventListener('click', () => {
-    closeBattingSlide();
-});
-
-// Function to check the betting result after each round
-function checkBettingResult() {
-    if (userBets.length === 0) return; // No bet placed, do not show any result
-
-    const latestResult = results[0];
-    let totalWinAmount = 0;
-    let hasWon = false;
-
-    // Check each bet for a result
-    userBets.forEach(bet => {
-        let isWin = false;
-        let winAmount = 0;
-
-        // Check the bet conditions for winning
-        if ((bet.option === "Big" && latestResult.number >= 5) ||
-            (bet.option === "Small" && latestResult.number < 5)) {
-            isWin = true;
-            winAmount = bet.amount * 1.96; // Big/Small win
-        } else if ((bet.option === "Red" && latestResult.colorClass === "red" && latestResult.number !== 5) ||
-                   (bet.option === "Green" && latestResult.colorClass === "green" && latestResult.number !== 0)) {
-            isWin = true;
-            winAmount = bet.amount * 1.96; // Red/Green win
-        } else if (bet.option === "Red" && latestResult.number === 0) {
-            isWin = true;
-            winAmount = bet.amount * 1.5; // Red win with 0
-        } else if (bet.option === "Green" && latestResult.number === 5) {
-            isWin = true;
-            winAmount = bet.amount * 1.5; // Green win with 5
-        } else if (bet.option === "Violet" && latestResult.colorClass === "violet") {
-            isWin = true;
-            winAmount = bet.amount * 4.52; // Violet win
-        } else if (parseInt(bet.option) === latestResult.number) {
-            isWin = true;
-            winAmount = bet.amount * 8.51; // Specific number win
-        }
-
-        if (isWin) {
-            walletBalance += winAmount;
-            totalWinAmount += winAmount;
-            hasWon = true;
-        }
-    });
-
-    // Show the result to the user after checking all bets
-    if (hasWon) {
-        showAlert(`You Won\n₹${totalWinAmount.toFixed(2)}`, 'win.png', true, latestResult.number, latestResult.colorClass, totalWinAmount, latestResult.period);
-    } else {
-        showAlert("Didn't Win", 'loss.png', false);
-    }
-
-    // Reset user bets after the round is complete
-    userBets = [];
-
-    // Update the wallet balance display on the page
-    document.getElementById('walletBalanceBox').innerText = ` ₹${walletBalance}`;
+// Toast Notification Function (केवल बेटिंग मैसेज के लिए)
+function ShowToast(message) {
+    const toast = document.createElement('div');
+    toast.classList.add('toast-notification');
+    
+    toast.innerHTML = `
+        <div class="toast-content">${message}</div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
 }
 
-// Custom alert function with background image
+// Custom alert function with background image (जीत/हार के लिए मूल फंक्शन)
 function showAlert(message, backgroundImage, isWin, winningNumber = null, winningColor = null, Won = null, periodNo = null) {
     const alertBox = document.createElement('div');
     alertBox.classList.add('custom-alert');
@@ -243,7 +177,6 @@ function showAlert(message, backgroundImage, isWin, winningNumber = null, winnin
     // Add win or loss class based on the result
     if (isWin) {
         alertBox.classList.add('win');
-        // Construct the inner HTML for the alert box
         alertBox.innerHTML = `
             <div class="alert-message">
                 <h1>Congratulations</h1>
@@ -254,7 +187,6 @@ function showAlert(message, backgroundImage, isWin, winningNumber = null, winnin
         `;
     } else {
         alertBox.classList.add('loss');
-        // Construct the inner HTML for the alert box
         alertBox.innerHTML = `
             <div class="alert-message">
                 <h1>Sorry</h1>
@@ -267,6 +199,87 @@ function showAlert(message, backgroundImage, isWin, winningNumber = null, winnin
     setTimeout(() => {
         alertBox.remove();
     }, 5000);
+}
+
+// Event listener for the "Confirm Bet" button
+document.getElementById('confirmBet').addEventListener('click', () => {
+    const betAmount = parseInt(document.getElementById('betAmount').value, 10);
+    const selectedOption = document.getElementById('selectedOption').innerText.split(": ")[1];
+
+    if (isNaN(betAmount) || betAmount <= 0) {
+        ShowToast("कृपया वैध राशि दर्ज करें।");
+        return;
+    }
+    if (betAmount > walletBalance) {
+        ShowToast("अपर्याप्त बैलेंस!");
+        closeBattingSlide();
+    } else {
+        userBets.push({
+            option: selectedOption,
+            amount: betAmount
+        });
+
+        walletBalance -= betAmount;
+        document.getElementById('walletBalanceBox').innerText = ` ₹${walletBalance}`;
+        ShowToast(`बेट सफल! ₹${betAmount} आपके वॉलेट से कट गई है।`);
+        closeBattingSlide();
+    }
+});
+
+// Event listener for the "Cancel Bet" button
+document.getElementById('cancelBet').addEventListener('click', () => {
+    closeBattingSlide();
+});
+
+// Function to check the betting result after each round
+function checkBettingResult() {
+    if (userBets.length === 0) return;
+
+    const latestResult = results[0];
+    let totalWinAmount = 0;
+    let hasWon = false;
+
+    userBets.forEach(bet => {
+        let isWin = false;
+        let winAmount = 0;
+
+        if ((bet.option === "Big" && latestResult.number >= 5) ||
+            (bet.option === "Small" && latestResult.number < 5)) {
+            isWin = true;
+            winAmount = bet.amount * 1.96;
+        } else if ((bet.option === "Red" && latestResult.colorClass === "red" && latestResult.number !== 5) ||
+                   (bet.option === "Green" && latestResult.colorClass === "green" && latestResult.number !== 0)) {
+            isWin = true;
+            winAmount = bet.amount * 1.96;
+        } else if (bet.option === "Red" && latestResult.number === 0) {
+            isWin = true;
+            winAmount = bet.amount * 1.5;
+        } else if (bet.option === "Green" && latestResult.number === 5) {
+            isWin = true;
+            winAmount = bet.amount * 1.5;
+        } else if (bet.option === "Violet" && latestResult.colorClass === "violet") {
+            isWin = true;
+            winAmount = bet.amount * 4.52;
+        } else if (parseInt(bet.option) === latestResult.number) {
+            isWin = true;
+            winAmount = bet.amount * 8.51;
+        }
+
+        if (isWin) {
+            walletBalance += winAmount;
+            totalWinAmount += winAmount;
+            hasWon = true;
+        }
+    });
+
+    if (hasWon) {
+        showAlert(`You Won\n₹${totalWinAmount.toFixed(2)}`, 'win.png', true, latestResult.number, latestResult.colorClass, totalWinAmount, latestResult.period);
+    } else {
+        showAlert("Didn't Win", 'loss.png', false);
+    }
+
+    userBets = [];
+    document.getElementById('walletBalanceBox').innerText = ` ₹${walletBalance}`;
 }
 
 // Function to update navigation buttons state
@@ -332,6 +345,7 @@ function showCountdownOverlay() {
         }
     }, 1000);
 }
+
 let playerBet = 500;
 let houseBalance = 10000;
 let lossLimit = 2000;
@@ -350,6 +364,7 @@ if (houseBalance - lossLimit < 0) {
 }
 
 // Result Calculation
+let result;
 if (Math.random() < winProbability) {
     result = "Player Wins";
     houseBalance -= playerBet;
@@ -367,5 +382,3 @@ console.log(`Result: ${result}, House Balance: ${houseBalance}`);
 
 // Start the game timer
 startTimer();
-
-
